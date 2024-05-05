@@ -73,12 +73,11 @@ jobs:
       - name: Set up nodeJS
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 20
       - name: Install dependecies
         run: |
           cd frontend/
-          npm install --legacy-peer-deps
-          npm install --pakage-lock-only
+          npm ci
       - name: Test frontend 
         run: |
           cd frontend/
