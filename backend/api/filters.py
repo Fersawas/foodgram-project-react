@@ -37,4 +37,4 @@ class RecipeFilter(FilterSet):
         fields = (
             'author',
             'tags'
-            )
+        )

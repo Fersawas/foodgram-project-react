@@ -5,6 +5,7 @@ from django.core.validators import RegexValidator, EmailValidator
 
 from .constants import MAX_EMAIL_LENGTH, MAX_LENGTH
 
+
 class UserMain(AbstractUser):
     username = models.CharField(
         verbose_name='Логин',
@@ -45,6 +46,7 @@ class UserMain(AbstractUser):
 
 User = get_user_model()
 
+
 class Follow(models.Model):
     user = models.ForeignKey(
         User, related_name='main',
@@ -66,6 +68,6 @@ class Follow(models.Model):
         ]
         verbose_name: str = 'Подписка'
         verbose_name_plural: str = 'Подписки'
-    
+
     def __str__(self) -> str:
         return str(self.user)

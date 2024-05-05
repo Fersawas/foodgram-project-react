@@ -65,10 +65,12 @@ class IngredientCount(models.Model):
                 fields=['ingredient', 'amount'],
                 name='ingred-amount'
             )
-        ]        
-    
+        ]
+
     def __str__(self):
-        result = self.ingredient.name + ' ' + str(self.amount) + self.ingredient.measurment_unit 
+        result = (self.ingredient.name + ' '
+                  + str(self.amount)
+                  + self.ingredient.measurment_unit)
         return result
 
 
@@ -141,6 +143,7 @@ class Favorite(models.Model):
         ]
         verbose_name = 'Избранное'
         verbose_name_plural = 'Избранные'
+
     def __str__(self):
         return str(self.user)
 

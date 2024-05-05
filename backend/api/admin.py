@@ -76,7 +76,8 @@ class RecipeAdmin(admin.ModelAdmin):
 
     def get_ingred(self, obj):
         return [
-            f"{ingredients.ingredient.name} - {ingredients.amount}{ingredients.ingredient.measurment_unit}"
+            (f"{ingredients.ingredient.name} - {ingredients.amount}"
+             f"{ingredients.ingredient.measurment_unit}")
             for ingredients in obj.ingredients.all()
         ]
 

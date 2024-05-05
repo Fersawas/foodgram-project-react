@@ -7,7 +7,8 @@ from django.contrib.auth import get_user_model
 from django.core.files.base import ContentFile
 
 from users.models import Follow
-from food.models import Recipe, Tag, Favorite, Shopcart, IngredientMesurment, IngredientCount
+from food.models import (Recipe, Tag, Favorite,
+                         Shopcart, IngredientMesurment, IngredientCount)
 from api.messages import (SHOP_CART_ERRORS, FAVORITE_ERRORS,
                           RECIPE_ERRORS, FOLLOW_ERRORS, TAGS, USER_ERRORS)
 
@@ -60,7 +61,7 @@ class UserMainSerializer(serializers.ModelSerializer):
                 user=followed.id,
                 follower=user_check.id,)
             return True
-        except:
+        except Exception:
             return False
 
 
@@ -114,7 +115,7 @@ class RecipeSerializer(serializers.ModelSerializer):
 
 
 class UserRecipeSerializer(serializers.ModelSerializer):
-    recipes = serializers.SerializerMethodField()#RecipeSerializer(many=True)
+    recipes = serializers.SerializerMethodField()
     is_subscribed = serializers.SerializerMethodField()
     recipes_count = serializers.SerializerMethodField()
 
@@ -134,7 +135,7 @@ class UserRecipeSerializer(serializers.ModelSerializer):
     def get_recipes(self, user):
         try:
             recipes_limit = int(self.context['request'].GET['recipes_limit'])
-        except:
+        except Exception:
             recipes_limit = None
         recipes = Recipe.objects.filter(author=user)[:recipes_limit]
         return RecipeSerializer(recipes, many=True, context=self.context).data
@@ -148,7 +149,7 @@ class UserRecipeSerializer(serializers.ModelSerializer):
                 user=followed.id,
                 follower=user_check.id)
             return True
-        except:
+        except Exception:
             return False
 
     def get_recipes_count(self, obj):
@@ -177,8 +178,7 @@ class ShopCartSerializer(serializers.ModelSerializer):
                 recipe=recipe_id
             ).exists():
                 raise serializers.ValidationError(
-                   {'ERROR': SHOP_CART_ERRORS['dublicate']}
-                )
+                    {'ERROR': SHOP_CART_ERRORS['dublicate']})
         if self.context['request'].method == 'DELETE':
             if not Shopcart.objects.get(
                 user=user.id,
@@ -251,20 +251,17 @@ class FollowSerializer(serializers.ModelSerializer):
                 follower=user.id
             ).exists():
                 raise serializers.ValidationError(
-                    {'ERROR': FOLLOW_ERRORS['dublicate']}
-                )
+                    {'ERROR': FOLLOW_ERRORS['dublicate']})
             elif subscribe_user_id == user.id:
                 raise serializers.ValidationError(
-                    {'ERROR': FOLLOW_ERRORS['self sub']}
-                )
+                    {'ERROR': FOLLOW_ERRORS['self sub']})
         if self.context['request'].method == 'DELETE':
             if not Follow.objects.filter(
                 user=subscribe_user_id,
                 follower=user.id
             ).exists():
                 raise serializers.ValidationError(
-                     {'ERROR': FOLLOW_ERRORS['delete']}
-                )
+                    {'ERROR': FOLLOW_ERRORS['delete']})
         return obj
 
 
@@ -283,6 +280,7 @@ class IngredientCountSerializer(serializers.ModelSerializer):
     name = serializers.CharField(source='ingredient.name')
     measurement_unit = serializers.CharField(
         source='ingredient.measurement_unit')
+
     class Meta:
         model = IngredientCount
         fields = [
@@ -335,8 +333,8 @@ class ReadRecipeSerializer(serializers.ModelSerializer):
                 user=user,
                 recipe=obj)
             return True
-        except:
-            return False   
+        except Exception:
+            return False
 
     def get_is_in_shopping_cart(self, obj):
         user = self.context['request'].user
@@ -346,7 +344,7 @@ class ReadRecipeSerializer(serializers.ModelSerializer):
                 recipe=obj
             )
             return True
-        except:
+        except Exception:
             return False
 
 
@@ -376,7 +374,7 @@ class MainRecipeSerializer(serializers.ModelSerializer):
             'image',
             'text',
             'cooking_time'
-            ]
+        ]
 
     def get_is_favorited(self, obj):
         user = self.context['request'].user
@@ -396,7 +394,7 @@ class MainRecipeSerializer(serializers.ModelSerializer):
                 recipe=obj
             )
             return True
-        except:
+        except Exception:
             return False
 
     def create_patch_ingred(self, recipe, ingredients):
@@ -405,7 +403,7 @@ class MainRecipeSerializer(serializers.ModelSerializer):
                 current_ingredient = IngredientMesurment.objects.get(
                     pk=ingredient['id']
                 )
-            except:
+            except Exception:
                 raise serializers.ValidationError(
                     {'ERROR': RECIPE_ERRORS['not_such_ingred']}
                 )
@@ -422,7 +420,7 @@ class MainRecipeSerializer(serializers.ModelSerializer):
 
     def get_patch_tag(self, recipe, tags):
         for tag in tags:
-            current_tag= get_object_or_404(Tag, id=tag.id)
+            current_tag = get_object_or_404(Tag, id=tag.id)
             recipe.tags.add(current_tag)
         return recipe
 
@@ -441,7 +439,7 @@ class MainRecipeSerializer(serializers.ModelSerializer):
         self.create_patch_ingred(recipe=recipe, ingredients=ingredients)
         self.get_patch_tag(recipe=recipe, tags=tags)
         return recipe
-    
+
     def update(self, instance, validated_data):
         ingredients = validated_data.pop('ingredients', None)
         tags = validated_data.pop('tags', None)

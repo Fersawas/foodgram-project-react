@@ -3,7 +3,6 @@ from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, SAFE_METHODS, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.pagination import PageNumberPagination
 
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
@@ -20,7 +19,8 @@ from food.models import Tag, Recipe, IngredientMesurment, Favorite, Shopcart
 from api.permissions import IsAuthorOrRead
 from api.pagination import LimitPagination
 from api.filters import RecipeFilter, IngredientsFilter
-from api.messages import RECIPE_ERRORS, SHOP_CART_ERRORS, SHOPPING_CART, FAVORITE_ERRORS
+from api.messages import (RECIPE_ERRORS, SHOP_CART_ERRORS,
+                          SHOPPING_CART, FAVORITE_ERRORS)
 from api.serializers import (
     IngredientMesurmentSerializer, MainRecipeSerializer, TagSerializer,
     FollowSerializer, ShopCartSerializer, UserRecipeSerializer,
@@ -68,10 +68,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
         recipes_cart = Recipe.objects.filter(
             shopcart__user=user,)
         ingredients = recipes_cart.values_list(
-                'ingredients__ingredient__name',
-                'ingredients__ingredient__measurement_unit'
-            ).annotate(
-            amount_sum=Sum('ingredients__amount'))
+            'ingredients__ingredient__name',
+            'ingredients__ingredient__measurement_unit').annotate(
+                amount_sum=Sum('ingredients__amount'))
         for ingred in ingredients:
             list_ingred += (f'\n{ingred[0]} {ingred[2]}{ingred[1]}')
         list_ingred += (f'\n\n{SHOPPING_CART["ending"]}')
@@ -89,16 +88,16 @@ class RecipeViewSet(viewsets.ModelViewSet):
             recipe_for_favorite = Recipe.objects.get(
                 pk=pk
             )
-        except:
+        except Exception:
             return Response(
-                    {'ERROR': RECIPE_ERRORS['no recipe']},
-                    status=status.HTTP_400_BAD_REQUEST)
+                {'ERROR': RECIPE_ERRORS['no recipe']},
+                status=status.HTTP_400_BAD_REQUEST)
         if request.method == 'DELETE':
             try:
                 favorite_recipe = Favorite.objects.get(
                     user=user, recipe=recipe_for_favorite
                 )
-            except:
+            except Exception:
                 return Response(
                     {'ERROR': RECIPE_ERRORS['no recipe']},
                     status=status.HTTP_400_BAD_REQUEST)
@@ -106,7 +105,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             return Response(status=status.HTTP_204_NO_CONTENT)
         try:
             Favorite.objects.create(user=user, recipe=recipe_for_favorite)
-        except:
+        except Exception:
             return Response({'ERROR': FAVORITE_ERRORS['dublicate']},
                             status=status.HTTP_400_BAD_REQUEST)
         serializer = self.get_serializer(recipe_for_favorite)
@@ -120,17 +119,16 @@ class RecipeViewSet(viewsets.ModelViewSet):
             User, username=user.username
         )
         try:
-            recipe=Recipe.objects.get(pk=pk)
-        except:
+            recipe = Recipe.objects.get(pk=pk)
+        except Exception:
             return Response(
                 {'ERROR': RECIPE_ERRORS['no recipe']},
                 status=status.HTTP_400_BAD_REQUEST)
         if request.method == 'DELETE':
             try:
                 shopcart_recipe = Shopcart.objects.get(
-                    user=user, recipe=recipe
-                    )
-            except:
+                    user=user, recipe=recipe)
+            except Exception:
                 return Response(
                     {'ERROR': RECIPE_ERRORS['no recipe']},
                     status=status.HTTP_400_BAD_REQUEST)
@@ -138,7 +136,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             return Response(status=status.HTTP_204_NO_CONTENT)
         try:
             Shopcart.objects.create(user=user, recipe=recipe)
-        except:
+        except Exception:
             return Response({'ERROR': SHOP_CART_ERRORS['dublicate']},
                             status=status.HTTP_400_BAD_REQUEST)
         serializer = self.get_serializer(recipe)
