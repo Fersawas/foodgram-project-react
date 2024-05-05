@@ -1,0 +1,35 @@
+version: '3'
+
+volumes:
+  pg_food:
+  food_static:
+  food_media:
+
+services:
+  food_db:
+    env_file: .env
+    image: postgres:13.10
+    volumes:
+      - pg_food:/var/lib/postgresql/data
+  backend:
+    image: fersawas/foodgram_backend
+    env_file: .env
+    volumes:
+      - food_static:/backend_static
+      - food_media:/media
+    depends_on:
+      - food_db
+  frontend:
+    env_file: .env
+    image: fersawas/foodgram_frontend
+    command: cp -r /app/build/. /static/
+    volumes:
+      - food_static:/static
+  gateway:
+    image: fersawas/foodgram_gateway
+    env_file: .env
+    ports:
+      - 8080:80
+    volumes:
+      - food_static:/static
+      - food_media:/media

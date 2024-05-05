@@ -1,0 +1,2 @@
+MAX_LENGTH: int = 150
+MAX_EMAIL_LENGTH: int = 254
