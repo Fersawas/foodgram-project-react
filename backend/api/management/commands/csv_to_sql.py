@@ -1,8 +1,9 @@
 import csv
 import os
 from typing import Any
-from food.models import Tag, IngredientMesurment
+
 from django.core.management.base import BaseCommand
+from food.models import IngredientMesurment, Tag
 
 
 class Command(BaseCommand):

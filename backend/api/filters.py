@@ -1,6 +1,5 @@
-from django_filters.rest_framework import filters, FilterSet
-
-from food.models import Recipe, Tag, IngredientMesurment
+from django_filters.rest_framework import FilterSet, filters
+from food.models import IngredientMesurment, Recipe, Tag
 
 
 class IngredientsFilter(FilterSet):

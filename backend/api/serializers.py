@@ -1,16 +1,15 @@
+# isort: off
 import base64
 
-from rest_framework import serializers
-
-from django.shortcuts import get_object_or_404
+from api.messages import (FAVORITE_ERRORS, FOLLOW_ERRORS, RECIPE_ERRORS,
+                          SHOP_CART_ERRORS, TAGS, USER_ERRORS)
 from django.contrib.auth import get_user_model
 from django.core.files.base import ContentFile
-
+from django.shortcuts import get_object_or_404
+from food.models import (Favorite, IngredientCount, IngredientMesurment,
+                         Recipe, Shopcart, Tag)
+from rest_framework import serializers
 from users.models import Follow
-from food.models import (Recipe, Tag, Favorite,
-                         Shopcart, IngredientMesurment, IngredientCount)
-from api.messages import (SHOP_CART_ERRORS, FAVORITE_ERRORS,
-                          RECIPE_ERRORS, FOLLOW_ERRORS, TAGS, USER_ERRORS)
 
 NAME_LENGTH: int = 128
 User = get_user_model()

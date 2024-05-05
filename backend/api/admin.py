@@ -1,9 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-
-from users.models import UserMain, Follow
-from food.models import (Tag, Recipe, IngredientMesurment,
-                         IngredientCount, Favorite, Shopcart)
+from food.models import (Favorite, IngredientCount, IngredientMesurment,
+                         Recipe, Shopcart, Tag)
+from users.models import Follow, UserMain
 
 
 @admin.register(UserMain)

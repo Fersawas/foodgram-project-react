@@ -1,30 +1,26 @@
-from rest_framework import viewsets
-from rest_framework.decorators import action
-from rest_framework.permissions import AllowAny, SAFE_METHODS, IsAuthenticated
-from rest_framework.response import Response
-from rest_framework import status
-
-from django.shortcuts import get_object_or_404
+# isort: off
+from api.filters import IngredientsFilter, RecipeFilter
+from api.messages import (FAVORITE_ERRORS, RECIPE_ERRORS, SHOP_CART_ERRORS,
+                          SHOPPING_CART)
+from api.pagination import LimitPagination
+from api.permissions import IsAuthorOrRead
+from api.serializers import (FollowSerializer, IngredientMesurmentSerializer,
+                             MainRecipeSerializer, ReadRecipeSerializer,
+                             ShopCartSerializer, TagSerializer,
+                             UserRecipeSerializer)
 from django.contrib.auth import get_user_model
 from django.db.models import Sum
 from django.http import HttpResponse
-
+from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-
-from djoser.views import UserViewSet
 from djoser.conf import settings
-
+from djoser.views import UserViewSet
+from food.models import Favorite, IngredientMesurment, Recipe, Shopcart, Tag
+from rest_framework import status, viewsets
+from rest_framework.decorators import action
+from rest_framework.permissions import SAFE_METHODS, AllowAny, IsAuthenticated
+from rest_framework.response import Response
 from users.models import Follow
-from food.models import Tag, Recipe, IngredientMesurment, Favorite, Shopcart
-from api.permissions import IsAuthorOrRead
-from api.pagination import LimitPagination
-from api.filters import RecipeFilter, IngredientsFilter
-from api.messages import (RECIPE_ERRORS, SHOP_CART_ERRORS,
-                          SHOPPING_CART, FAVORITE_ERRORS)
-from api.serializers import (
-    IngredientMesurmentSerializer, MainRecipeSerializer, TagSerializer,
-    FollowSerializer, ShopCartSerializer, UserRecipeSerializer,
-    ReadRecipeSerializer)
 
 PERMISSIONS_USER: list[str] = ['me', 'subscribe', 'subscriptions']
 User = get_user_model()

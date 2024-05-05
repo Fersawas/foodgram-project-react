@@ -1,12 +1,8 @@
-from django.urls import path, include
-
-from djoser.views import TokenDestroyView, TokenCreateView
-
+from api.views import (IngredientMesurmentViewSet, MainUser, RecipeViewSet,
+                       TagViewSet)
+from django.urls import include, path
+from djoser.views import TokenCreateView, TokenDestroyView
 from rest_framework import routers
-
-from api.views import (RecipeViewSet, TagViewSet,
-                       MainUser, IngredientMesurmentViewSet)
-
 
 router = routers.SimpleRouter()
 

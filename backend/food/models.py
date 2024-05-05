@@ -1,9 +1,8 @@
-from django.db import models
 from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator
+from django.db import models
 
-from .constants import MAX_LENGTH, COLOR_LENGTH, COOK_VALIDATOR_MESSAGE
-
+from .constants import COLOR_LENGTH, COOK_VALIDATOR_MESSAGE, MAX_LENGTH
 
 User = get_user_model()
 
