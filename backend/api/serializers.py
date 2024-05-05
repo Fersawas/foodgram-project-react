@@ -195,7 +195,7 @@ class FavoriteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Favorite
-        fields = ['recipe',]
+        fields = ['recipe', ]
 
     def get_recipe(self, obj):
         recipe_id = self.initial_data['recipe_id']

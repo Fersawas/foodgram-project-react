@@ -78,7 +78,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
                             status=status.HTTP_200_OK)
 
     @action(['post', 'delete'], detail=True,
-            permission_classes=[IsAuthenticated,])
+            permission_classes=[IsAuthenticated])
     def favorite(self, request, pk, *args, **kwargs):
         user = request.user
         user = get_object_or_404(
@@ -153,7 +153,7 @@ class TagViewSet(viewsets.ReadOnlyModelViewSet):
 class IngredientMesurmentViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = IngredientMesurmentSerializer
     queryset = IngredientMesurment.objects.all()
-    permission_classes = [AllowAny,]
+    permission_classes = [AllowAny]
     pagination_class = None
     filter_backends = [DjangoFilterBackend, ]
     filterset_class = IngredientsFilter
