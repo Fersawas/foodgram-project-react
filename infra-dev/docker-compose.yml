@@ -1,14 +1,5 @@
 version: '3.8'
 services:
-
-  #backend:
-  #  build:
-  #    context: ../backend
-  #    dockerfile: Dockerfile
-  #  
-  #  volumes:
-  #    - ../frontend/:app/result_build/
-  #
   frontend:
     build:
       context: ../frontend

@@ -8,10 +8,11 @@ from django.core.files.base import ContentFile
 from django.shortcuts import get_object_or_404
 from food.models import (Favorite, IngredientCount, IngredientMesurment,
                          Recipe, Shopcart, Tag)
+from food.constants import NAME_LENGTH
 from rest_framework import serializers
 from users.models import Follow
 
-NAME_LENGTH: int = 128
+
 User = get_user_model()
 
 
@@ -53,15 +54,11 @@ class UserMainSerializer(serializers.ModelSerializer):
 
     def get_is_subscribed(self, obj):
         user = self.context['request'].user
-        try:
-            user_check = User.objects.get(username=user.username)
-            followed = User.objects.get(username=obj.username)
-            Follow.objects.get(
-                user=followed.id,
-                follower=user_check.id,)
-            return True
-        except Exception:
-            return False
+        user_check = User.objects.get(username=user.username)
+        followed = User.objects.get(username=obj.username)
+        return Follow.objects.filter(
+            user=followed.id,
+            follower=user_check.id).exists()
 
 
 class UserMainCreateSerializer(serializers.ModelSerializer):
@@ -141,15 +138,11 @@ class UserRecipeSerializer(serializers.ModelSerializer):
 
     def get_is_subscribed(self, obj):
         user = self.context['request'].user
-        try:
-            user_check = User.objects.get(username=user.username)
-            followed = User.objects.get(username=obj.username)
-            Follow.objects.get(
-                user=followed.id,
-                follower=user_check.id)
-            return True
-        except Exception:
-            return False
+        user_check = User.objects.get(username=user.username)
+        followed = User.objects.get(username=obj.username)
+        return Follow.objects.filter(
+            user=followed.id,
+            follower=user_check.id).exists()
 
     def get_recipes_count(self, obj):
         return obj.recipes.count()
@@ -161,8 +154,6 @@ class ShopCartSerializer(serializers.ModelSerializer):
         fields = ''
 
     def to_representation(self, instance):
-        print('SHHOP CART')
-        print(instance)
         recipe = get_object_or_404(Recipe, pk=instance.id)
         return RecipeSerializer(instance=recipe).data
 
@@ -327,24 +318,13 @@ class ReadRecipeSerializer(serializers.ModelSerializer):
 
     def get_is_favorited(self, obj):
         user = self.context['request'].user
-        try:
-            Favorite.objects.get(
-                user=user,
-                recipe=obj)
-            return True
-        except Exception:
-            return False
+        return Favorite.objects.filter(
+            user=user, recipe=obj).exists()
 
     def get_is_in_shopping_cart(self, obj):
         user = self.context['request'].user
-        try:
-            Shopcart.objects.get(
-                user=user,
-                recipe=obj
-            )
-            return True
-        except Exception:
-            return False
+        return Shopcart.objects.filter(
+            user=user, recipe=obj).exists()
 
 
 class MainRecipeSerializer(serializers.ModelSerializer):
@@ -377,24 +357,13 @@ class MainRecipeSerializer(serializers.ModelSerializer):
 
     def get_is_favorited(self, obj):
         user = self.context['request'].user
-        try:
-            Favorite.objects.get(
-                user=user,
-                recipe=obj)
-            return True
-        except Exception:
-            return False
+        return Favorite.objects.filter(
+            user=user, recipe=obj).exists()
 
     def get_is_in_shopping_cart(self, obj):
         user = self.context['request'].user
-        try:
-            Shopcart.objects.get(
-                user=user,
-                recipe=obj
-            )
-            return True
-        except Exception:
-            return False
+        return Shopcart.objects.filter(
+            user=user, recipe=obj).exists()
 
     def create_patch_ingred(self, recipe, ingredients):
         for ingredient in ingredients:
@@ -457,7 +426,6 @@ class MainRecipeSerializer(serializers.ModelSerializer):
         return instance
 
     def validate(self, attrs):
-        print(attrs)
         INGRED_CHECK: set = set()
         if 'ingredients' not in attrs:
             raise serializers.ValidationError(
