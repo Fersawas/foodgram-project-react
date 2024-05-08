@@ -1,3 +1,8 @@
+MAX_LENGTH: int = 200
+COLOR_LENGTH: int = 20
+COOK_VALIDATOR_MESSAGE: str = 'Минимально допустимое время 1 мин'
+NAME_LENGTH: int = 128
+
 SHOP_CART_ERRORS: dict = {
     'dublicate': 'Вы не можете добавлять одинаковые рецепты',
     'delete': 'Такого рецепта у вас в корзине товаров нет'

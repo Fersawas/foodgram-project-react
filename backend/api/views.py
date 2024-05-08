@@ -1,7 +1,7 @@
 # isort: off
 from api.filters import IngredientsFilter, RecipeFilter
-from api.messages import (FAVORITE_ERRORS, RECIPE_ERRORS, SHOP_CART_ERRORS,
-                          SHOPPING_CART)
+from api.messages_constants import (FAVORITE_ERRORS, RECIPE_ERRORS,
+                                    SHOP_CART_ERRORS, SHOPPING_CART)
 from api.pagination import LimitPagination
 from api.permissions import IsAuthorOrRead
 from api.serializers import (FollowSerializer, IngredientMesurmentSerializer,

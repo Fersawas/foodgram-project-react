@@ -1,14 +1,14 @@
 # isort: off
 import base64
 
-from api.messages import (FAVORITE_ERRORS, FOLLOW_ERRORS, RECIPE_ERRORS,
-                          SHOP_CART_ERRORS, TAGS, USER_ERRORS)
+from api.messages_constants import (FAVORITE_ERRORS, FOLLOW_ERRORS,
+                                    RECIPE_ERRORS, SHOP_CART_ERRORS,
+                                    TAGS, USER_ERRORS, NAME_LENGTH)
 from django.contrib.auth import get_user_model
 from django.core.files.base import ContentFile
 from django.shortcuts import get_object_or_404
 from food.models import (Favorite, IngredientCount, IngredientMesurment,
                          Recipe, Shopcart, Tag)
-from food.constants import NAME_LENGTH
 from rest_framework import serializers
 from users.models import Follow
 

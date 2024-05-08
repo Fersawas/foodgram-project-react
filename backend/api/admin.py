@@ -76,15 +76,13 @@ class RecipeAdmin(admin.ModelAdmin):
     def get_ingred(self, obj):
         return [
             (f"{ingredients.ingredient.name} - {ingredients.amount}"
-             f"{ingredients.ingredient.measurment_unit}")
+             f"{ingredients.ingredient.measurement_unit}")
             for ingredients in obj.ingredients.all()
         ]
 
     def get_favorite(self, obj):
         numb = Favorite.objects.filter(recipe=obj).count()
-        if numb is not None:
-            return numb
-        return 0
+        return numb
 
     get_tags.short_description = "Теги"
     get_ingred.short_description = "Ингредиенты"
