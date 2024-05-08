@@ -70,7 +70,7 @@ class IngredientCount(models.Model):
     def __str__(self):
         result = (self.ingredient.name + ' '
                   + str(self.amount)
-                  + self.ingredient.measurment_unit)
+                  + self.ingredient.measurement_unit)
         return result
 
 
