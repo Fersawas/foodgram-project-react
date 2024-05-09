@@ -1,7 +1,9 @@
+from django import forms
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from food.models import (Favorite, IngredientCount, IngredientMesurment,
                          Recipe, Shopcart, Tag)
+from api.messages_constants import RECIPE_ERRORS
 from users.models import Follow, UserMain
 
 
@@ -45,9 +47,23 @@ class IngredCountAdmin(admin.ModelAdmin):
     list_filter = ("ingredient", )
 
 
+class IngredFormset(forms.models.BaseInlineFormSet):
+    def clean(self):
+        count = 0
+        for form in self.forms:
+            try:
+                if form.cleaned_data:
+                    count += 1
+            except AttributeError:
+                pass
+        if count < 1:
+            raise forms.ValidationError(RECIPE_ERRORS['ingredients_err'])
+
+
 class IngredInline(admin.StackedInline):
     model = Recipe.ingredients.through
     extra = 0
+    formset = IngredFormset
     verbose_name = 'Ингредиент'
     verbose_name_plural = 'Ингредиенты'
 
@@ -63,7 +79,7 @@ class RecipeAdmin(admin.ModelAdmin):
         "get_tags",
         "get_ingred",
         "get_favorite")
-    exclude = ("ingredients",)
+    exclude = ("ingredients", )
 
     filter_horizontal = ("tags",)
     search_fields = ("name",)
